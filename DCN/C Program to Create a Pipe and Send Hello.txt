@@ -1,0 +1,31 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    int pipefd[2];  // Array to store the pipe file descriptors
+    char message[] = "Hello from pipe!";
+    char buffer[100];
+
+    // Create the pipe
+    if (pipe(pipefd) == -1) {
+        perror("pipe");
+        exit(1);
+    }
+
+    // Write to the pipe
+    write(pipefd[1], message, strlen(message) + 1);  //+1 to include the null terminator
+
+    // Read from the pipe
+    read(pipefd[0], buffer, sizeof(buffer));
+
+    // Print the message read from the pipe
+    printf("Message from pipe: %s\n", buffer); //placeholder is where the contents of buffer will be inserted.
+
+    // Close the pipe file descriptors
+    close(pipefd[0]);
+    close(pipefd[1]);
+
+    return 0;
+}
